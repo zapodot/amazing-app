@@ -1,0 +1,26 @@
+name: Handle Pull Requests
+
+on:
+  pull_request_target:
+
+env:
+  NPMJS_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+
+jobs:
+  handle-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Setup Node
+        uses: actions/setup-node@v5
+      - name: Running tests in PR
+        run: |
+          echo "Running tests in PR ${{ github.event.pull_request.title }}"
+          npm run build
+      - name: Upload Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: ./test-results
