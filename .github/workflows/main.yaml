@@ -48,6 +48,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
+          tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           push: true
 
   deploy:
@@ -55,7 +56,7 @@ jobs:
     needs: build
     steps:
       - name: Checkout code
-        run: echo "Deploying image ${{ needs.build.outputs.image_tag }} to production"
+        run: echo "Deploying image ${{ needs.build.outputs.image }} to production"
       - name: Deploy to prod
         uses: CND-Bergen/cnd-deploy-action@main
         with:
