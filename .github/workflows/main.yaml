@@ -24,11 +24,13 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: Setup Node
         uses: actions/setup-node@v5
-      - name: Test build
+      - name: Test build & generate tags
         run: |
           npm install
           echo "ACCESS_TOKEN=${{ secrets.DEPLOY_TOKEN }}" > .env
           npm run build
+          IMAGE_TAG="ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          echo IMAGE_TAG=${IMAGE_TAG,,} >> $GITHUB_ENV
 
       - name: Build image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
@@ -48,7 +50,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          tags: ${{ env.IMAGE_TAG }}
           push: true
 
   deploy:
