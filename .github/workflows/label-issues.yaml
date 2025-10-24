@@ -1,0 +1,29 @@
+name: "Pull Request Labeler"
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  labeler:
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Check files and set outcome
+      id: labeler 
+      run: |
+        echo "Checking files from issue ${{ github.event.issue.title }}"
+        git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > files.txt 
+        # Check if any files have changed in the 'src/' directory
+        if grep -q '^src/' files.txt; then
+          echo "source_changed=true" >> $GITHUB_OUTPUT
+        else
+          echo "source_changed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - uses: actions/labeler@v6
+      if: ${{ steps.labeler.outputs.source_changed }}
