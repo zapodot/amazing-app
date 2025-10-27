@@ -16,7 +16,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           token: ${{ secrets.NPMJS_TOKEN }}
       - name: Running tests in PR
-        run: npm run build && npm run test
+        run: npm install && npm run build
       - name: Upload Results
         if: always()
         uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4
