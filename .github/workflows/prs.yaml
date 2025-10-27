@@ -18,8 +18,10 @@ jobs:
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # ratchet:actions/setup-node@v5
       - name: Running tests in PR
         run: |
-          echo "Running tests in PR ${{ github.event.pull_request.title }}"
+          echo "Running tests in PR ${GITHUB_EVENT_PULL_REQUEST_TITLE}"
           npm run build
+        env:
+          GITHUB_EVENT_PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
       - name: Upload Results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # ratchet:actions/upload-artifact@v4
