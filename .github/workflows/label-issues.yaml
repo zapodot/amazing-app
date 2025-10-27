@@ -13,22 +13,22 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
     steps:
-    - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # ratchet:actions/checkout@v5
 
-    - name: Check files and set outcome
-      id: labeler 
-      run: |
-        echo "Checking files from issue ${{ github.event.issue.title }}"
-        git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > files.txt 
-        # Check if any files have changed in the 'src/' directory
-        if grep -q '^src/' files.txt; then
-          echo "source_changed=true" >> $GITHUB_OUTPUT
-        else
-          echo "source_changed=false" >> $GITHUB_OUTPUT
-        fi
+      - name: Check files and set outcome
+        id: labeler
+        run: "echo \"Checking files from issue ${{ github.event.issue.title }}\"\ngit diff --name-only ${{ github.event.before }} ${{ github.event.after }} > files.txt \n# Check if any files have changed in the 'src/' directory\nif grep -q '^src/' files.txt; then\n  echo \"source_changed=true\" >> $GITHUB_OUTPUT\nelse\n  echo \"source_changed=false\" >> $GITHUB_OUTPUT\nfi\n"
+      - uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # ratchet:actions/labeler@v6
+        if: ${{ steps.labeler.outputs.source_changed }}
+        with:
+          repo-token: ${{ env.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
 
-    - uses: actions/labeler@v6
-      if: ${{ steps.labeler.outputs.source_changed }}
-      with:
-        repo-token: ${{ env.GITHUB_TOKEN }}
-        configuration-path: .github/labeler.yml
+
+
+
+
+
+
+
+
