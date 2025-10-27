@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # ratchet:actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Setup Cache
         uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # ratchet:actions/cache@v3
         with:
